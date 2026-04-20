@@ -5,7 +5,7 @@ const JUMP_VELOCITY: float = 4.5
 
 var current_speed: float = MAX_WALK_SPEED
 
-@onready var camera: Camera3D = $camera
+@onready var camera: Camera3D = $Camera
 
 
 func _physics_process(delta: float) -> void:
@@ -14,7 +14,7 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 		current_speed = lerpf(current_speed, MAX_WALK_SPEED / 2, delta)
 	elif Input.is_action_pressed("run"):
-		current_speed = lerpf(current_speed, MAX_WALK_SPEED * 1.5, delta)
+		current_speed = lerpf(current_speed, MAX_WALK_SPEED * 2, delta)
 	else:
 		current_speed = lerpf(current_speed, MAX_WALK_SPEED, delta)
 

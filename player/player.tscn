@@ -1,20 +1,51 @@
-[gd_scene load_steps=4 format=3 uid="uid://d0o311c4ud6cr"]
+[gd_scene format=3 uid="uid://d0o311c4ud6cr"]
 
 [ext_resource type="Script" uid="uid://bvl16u6ttaya1" path="res://player/player.gd" id="1_oul6g"]
 [ext_resource type="Script" uid="uid://dove1qgrrl1u2" path="res://player/camera.gd" id="2_rkbax"]
+[ext_resource type="Script" uid="uid://dkq8j8no5cs3u" path="res://items/item_system.gd" id="3_g1dw6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kqu6x"]
 
-[node name="player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" unique_id=34272446]
 script = ExtResource("1_oul6g")
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=740985811]
+cast_shadow = 0
 
-[node name="hurtBox" type="CollisionShape3D" parent="."]
+[node name="Hurtbox" type="CollisionShape3D" parent="." unique_id=499778752]
 shape = SubResource("CapsuleShape3D_kqu6x")
 
-[node name="camera" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="." unique_id=1153919599]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 top_level = true
 script = ExtResource("2_rkbax")
 mouse_sensitivity = 0.1
+
+[node name="RayCast" type="RayCast3D" parent="Camera" unique_id=853769082]
+target_position = Vector3(0, 0, -3)
+
+[node name="LeftHand" type="Node3D" parent="Camera" unique_id=1371359400]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -1)
+
+[node name="ItemSystem" type="Node" parent="." unique_id=903073311 node_paths=PackedStringArray("ray_cast", "left_hand", "interact_label")]
+script = ExtResource("3_g1dw6")
+ray_cast = NodePath("../Camera/RayCast")
+left_hand = NodePath("../Camera/LeftHand")
+interact_label = NodePath("Interact")
+
+[node name="Interact" type="Label" parent="ItemSystem" unique_id=533262976]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -27.0
+offset_top = -69.0
+offset_right = 27.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 50
+text = " E "

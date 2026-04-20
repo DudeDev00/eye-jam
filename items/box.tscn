@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://ri5kveif7yq6"]
+
+[ext_resource type="Script" uid="uid://1t3p87wu46h0" path="res://items/item.gd" id="1_dlv3p"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e7f8u"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="Box" type="RigidBody3D" unique_id=1530669960]
+continuous_cd = true
+script = ExtResource("1_dlv3p")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1531737915]
+size = Vector3(0.5, 0.5, 0.5)
+
+[node name="CollisionShape" type="CollisionShape3D" parent="." unique_id=247301119]
+shape = SubResource("BoxShape3D_e7f8u")

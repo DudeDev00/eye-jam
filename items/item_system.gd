@@ -2,7 +2,19 @@ extends Node
 
 @export var ray_cast: RayCast3D
 @export var left_hand: Node3D
+
+## Time taken to throw in milliseconds.
+@export var hold_duration: float = 500.0
 @export var interact_label: Label
+
+var pressed_time: float = 0
+var elasped_time: float = 0
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			pressed_time = Time.get_ticks_msec()
 
 
 func _physics_process(_delta: float) -> void:
@@ -14,9 +26,18 @@ func _physics_process(_delta: float) -> void:
 			left_hand.remove_child(picked_item)
 			get_tree().current_scene.add_child(picked_item)
 
+			picked_item.pre_drop()
+
 			picked_item.global_position = left_hand.global_position
 			picked_item.global_rotation = left_hand.global_rotation
-			picked_item.pre_drop()
+		elif Input.is_action_pressed("attack"):
+			var current_time: float = Time.get_ticks_msec()
+			elasped_time = current_time - pressed_time
+			elasped_time = clampf(elasped_time, 0, hold_duration)
+		elif Input.is_action_just_released("attack"):
+			if elasped_time >= hold_duration / 5:
+				throw_item()
+				elasped_time = 0
 		return
 
 	if !ray_cast.is_colliding():
@@ -34,6 +55,22 @@ func _physics_process(_delta: float) -> void:
 		if item.get_parent():
 			item.get_parent().remove_child(item)
 		left_hand.add_child(item)
+
+		item.pre_pick()
+
 		item.global_position = left_hand.global_position
 		item.global_rotation = left_hand.global_rotation
-		item.pre_pick()
+
+
+func throw_item() -> void:
+	var picked_item: Item = left_hand.get_child(0)
+	left_hand.remove_child(picked_item)
+	get_tree().current_scene.add_child(picked_item)
+
+	picked_item.pre_drop()
+
+	picked_item.global_position = left_hand.global_position
+	picked_item.global_rotation = left_hand.global_rotation
+
+	var direction: Vector3 = (ray_cast.global_basis * ray_cast.target_position + Vector3.UP)
+	picked_item.linear_velocity = direction.normalized() * (elasped_time / 50)

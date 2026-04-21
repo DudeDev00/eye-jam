@@ -27,10 +27,11 @@ target_position = Vector3(0, 0, -3)
 [node name="LeftHand" type="Node3D" parent="Camera" unique_id=1371359400]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -1)
 
-[node name="ItemSystem" type="Node" parent="." unique_id=903073311 node_paths=PackedStringArray("ray_cast", "left_hand", "interact_label")]
+[node name="ItemSystem" type="Node" parent="." unique_id=903073311 node_paths=PackedStringArray("ray_cast", "left_hand", "throw_timer", "interact_label")]
 script = ExtResource("3_g1dw6")
 ray_cast = NodePath("../Camera/RayCast")
 left_hand = NodePath("../Camera/LeftHand")
+throw_timer = NodePath("ThrowTimer")
 interact_label = NodePath("Interact")
 
 [node name="Interact" type="Label" parent="ItemSystem" unique_id=533262976]
@@ -49,3 +50,9 @@ theme_override_colors/font_color = Color(1, 1, 0, 1)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 50
 text = " E "
+
+[node name="ThrowTimer" type="Timer" parent="ItemSystem" unique_id=930668272]
+wait_time = 0.2
+one_shot = true
+
+[connection signal="timeout" from="ItemSystem/ThrowTimer" to="ItemSystem" method="_on_throw_timer_timeout"]

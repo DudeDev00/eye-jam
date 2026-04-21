@@ -10,14 +10,14 @@ extends Node
 var pressed_time: float = 0
 var elasped_time: float = 0
 
-
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			pressed_time = Time.get_ticks_msec()
+var hand_pos: Vector3
 
 
-func _physics_process(_delta: float) -> void:
+func _ready() -> void:
+	hand_pos = left_hand.position
+
+
+func _physics_process(delta: float) -> void:
 	interact_label.visible = false
 
 	if left_hand.get_child_count():
@@ -30,14 +30,19 @@ func _physics_process(_delta: float) -> void:
 
 			picked_item.global_position = left_hand.global_position
 			picked_item.global_rotation = left_hand.global_rotation
+		elif Input.is_action_just_pressed("attack"):
+			pressed_time = Time.get_ticks_msec()
 		elif Input.is_action_pressed("attack"):
 			var current_time: float = Time.get_ticks_msec()
 			elasped_time = current_time - pressed_time
 			elasped_time = clampf(elasped_time, 0, hold_duration)
+			if elasped_time >= hold_duration / 5:
+				left_hand.position.x = move_toward(left_hand.position.x, 0, delta * 10)
 		elif Input.is_action_just_released("attack"):
 			if elasped_time >= hold_duration / 5:
 				throw_item()
 				elasped_time = 0
+			left_hand.position = hand_pos
 		return
 
 	if !ray_cast.is_colliding():
@@ -73,4 +78,5 @@ func throw_item() -> void:
 	picked_item.global_rotation = left_hand.global_rotation
 
 	var direction: Vector3 = (ray_cast.global_basis * ray_cast.target_position + Vector3.UP)
-	picked_item.linear_velocity = direction.normalized() * (elasped_time / 50)
+	direction = direction.normalized()
+	picked_item.linear_velocity = direction * (elasped_time / 50) * picked_item.throw_factor

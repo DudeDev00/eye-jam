@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://cpji732cm5hdg"]
+
+[ext_resource type="Script" uid="uid://ch4fs6qwf6u61" path="res://scripts/alive_body.gd" id="1_0miky"]
+[ext_resource type="PackedScene" uid="uid://xirccwaajnp5" path="res://items/dead_body.tscn" id="2_80dnp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_80dnp"]
+size = Vector3(0.5, 2, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0miky"]
+size = Vector3(0.5, 0.5, 2)
+
+[node name="AliveBody" type="CharacterBody3D" unique_id=1616193412 node_paths=PackedStringArray("visual", "static_pos", "timer")]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_0miky")
+dead_body = ExtResource("2_80dnp")
+visual = NodePath("Visual")
+static_pos = NodePath("StaticPose")
+timer = NodePath("Timer")
+
+[node name="Visual" type="Node3D" parent="." unique_id=818074896]
+transform = Transform3D(1, 0, 0, 0, 0.17364822, 0.9848077, 0, -0.9848077, 0.17364822, 0, 0, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Visual" unique_id=157606119]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+size = Vector3(0.5, 2, 0.5)
+
+[node name="HurtBox" type="CollisionShape3D" parent="." unique_id=362257419]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.25, -1)
+shape = SubResource("BoxShape3D_80dnp")
+
+[node name="StaticPose" type="Marker3D" parent="." unique_id=1179730056]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.25, 0)
+
+[node name="Timer" type="Timer" parent="." unique_id=160083351]
+wait_time = 2.0
+autostart = true
+
+[node name="Detector" type="Area3D" parent="." unique_id=78911484]
+collision_layer = 4
+collision_mask = 4
+
+[node name="Shape" type="CollisionShape3D" parent="Detector" unique_id=373554245]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, -1)
+shape = SubResource("BoxShape3D_0miky")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="area_entered" from="Detector" to="." method="_on_detector_area_entered"]
+[connection signal="body_entered" from="Detector" to="." method="_on_detector_body_entered"]

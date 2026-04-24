@@ -6,6 +6,91 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kqu6x"]
 
+[sub_resource type="Animation" id="Animation_g1dw6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimPlayer/Damage:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera:v_offset")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Camera:h_offset")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_yw30f"]
+resource_name = "damage"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimPlayer/Damage:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera:v_offset")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -0.135, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Camera:h_offset")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -0.1, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qjkh3"]
+_data = {
+&"RESET": SubResource("Animation_g1dw6"),
+&"damage": SubResource("Animation_yw30f")
+}
+
 [node name="Player" type="CharacterBody3D" unique_id=34272446]
 collision_layer = 2
 script = ExtResource("1_oul6g")
@@ -32,7 +117,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -1)
 
 [node name="ItemSystem" type="Node" parent="." unique_id=903073311 node_paths=PackedStringArray("ray_cast", "left_hand", "interact_label")]
 script = ExtResource("3_g1dw6")
-hold_duration = null
 ray_cast = NodePath("../Camera/RayCast")
 left_hand = NodePath("../Camera/LeftHand")
 interact_label = NodePath("Interact")
@@ -53,3 +137,15 @@ theme_override_colors/font_color = Color(1, 1, 0, 1)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 24
 text = " E "
+
+[node name="AnimPlayer" type="AnimationPlayer" parent="." unique_id=603865375]
+libraries/ = SubResource("AnimationLibrary_qjkh3")
+
+[node name="Damage" type="ColorRect" parent="AnimPlayer" unique_id=1674712414]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0, 0, 0.3647059)

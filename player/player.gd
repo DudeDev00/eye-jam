@@ -4,11 +4,23 @@ const MAX_WALK_SPEED: float = 5.0
 const JUMP_VELOCITY: float = 4.5
 
 var current_speed: float = MAX_WALK_SPEED
+var health: int = 10
 
 @onready var camera: Camera3D = $Camera
+@onready var anim_player: AnimationPlayer = $AnimPlayer
 
 
 func _physics_process(delta: float) -> void:
+	PlayerStats.position = global_position
+
+	if PlayerStats.take_damage:
+		health -= 1
+		anim_player.play("damage")
+		if health == 0:
+			PlayerStats.reset()
+			get_tree().reload_current_scene()
+		PlayerStats.take_damage = false
+
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta

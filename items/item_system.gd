@@ -1,11 +1,14 @@
+class_name ItemSystem
 extends Node
-
-@export var ray_cast: RayCast3D
-@export var left_hand: Node3D
 
 ## Time taken to throw in milliseconds.
 @export var hold_duration: float = 500.0
+
+@export var ray_cast: RayCast3D
+@export var left_hand: Node3D
 @export var interact_label: Label
+
+var hit_node
 
 var pressed_time: float = 0
 var elasped_time: float = 0
@@ -21,9 +24,28 @@ func _physics_process(delta: float) -> void:
 	interact_label.visible = false
 
 	if left_hand.get_child_count():
+		hit_node = null
+		var picked_item: Item = left_hand.get_child(0)
+		if ray_cast.is_colliding():
+			hit_node = ray_cast.get_collider()
+
+		if hit_node is Shop:
+			interact_label.visible = true
+			if Input.is_action_just_pressed("interact"):
+				var shop: Shop = hit_node
+
+				left_hand.remove_child(picked_item)
+				shop.container.add_child(picked_item)
+
+				picked_item.global_position = shop.container.global_position
+				picked_item.global_rotation = shop.container.global_rotation
+
+				shop.sell()
+				return
+
 		if Input.is_action_just_pressed("interact"):
-			var picked_item: Item = left_hand.get_child(0)
 			left_hand.remove_child(picked_item)
+
 			get_tree().current_scene.add_child(picked_item)
 
 			picked_item.pre_drop()
@@ -43,12 +65,13 @@ func _physics_process(delta: float) -> void:
 				throw_item()
 				elasped_time = 0
 			left_hand.position = hand_pos
+
 		return
 
 	if !ray_cast.is_colliding():
 		return
 
-	var hit_node := ray_cast.get_collider()
+	hit_node = ray_cast.get_collider()
 	if hit_node is not Item:
 		return
 

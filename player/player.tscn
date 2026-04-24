@@ -25,12 +25,14 @@ mouse_sensitivity = 0.1
 [node name="RayCast" type="RayCast3D" parent="Camera" unique_id=853769082]
 target_position = Vector3(0, 0, -3)
 collision_mask = 4
+collide_with_areas = true
 
 [node name="LeftHand" type="Node3D" parent="Camera" unique_id=1371359400]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -1)
 
 [node name="ItemSystem" type="Node" parent="." unique_id=903073311 node_paths=PackedStringArray("ray_cast", "left_hand", "interact_label")]
 script = ExtResource("3_g1dw6")
+hold_duration = null
 ray_cast = NodePath("../Camera/RayCast")
 left_hand = NodePath("../Camera/LeftHand")
 interact_label = NodePath("Interact")

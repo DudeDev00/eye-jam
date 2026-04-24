@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://be37u6nej4lxv"]
+
+[ext_resource type="Script" uid="uid://cqgrvwtbdxf2f" path="res://scripts/shop.gd" id="1_lx5au"]
+
+[sub_resource type="Animation" id="Animation_xfvoa"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Container:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_1l46r"]
+resource_name = "slide"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Container:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1, 0), Vector3(0, 1, -3)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_032fp"]
+_data = {
+&"RESET": SubResource("Animation_xfvoa"),
+&"slide": SubResource("Animation_1l46r")
+}
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tefeu"]
+size = Vector3(1, 1, 3)
+
+[node name="Shop" type="Node3D" unique_id=27318220]
+
+[node name="AnimPlayer" type="AnimationPlayer" parent="." unique_id=1270117009]
+libraries/ = SubResource("AnimationLibrary_032fp")
+
+[node name="Shop" type="Area3D" parent="." unique_id=97141707 node_paths=PackedStringArray("container", "anim_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_lx5au")
+container = NodePath("../Container")
+anim_player = NodePath("../AnimPlayer")
+
+[node name="HurtBox" type="CollisionShape3D" parent="Shop" unique_id=1919898807]
+shape = SubResource("BoxShape3D_tefeu")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="." unique_id=1658342536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+use_collision = true
+collision_mask = 6
+size = Vector3(1, 0.5, 3)
+
+[node name="Container" type="Node3D" parent="." unique_id=930506997]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1, 0)
